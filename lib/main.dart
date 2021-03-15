@@ -33,18 +33,64 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //Melakukan deklarasi controller
   final inputan = TextEditingController();
+  final hasil = TextEditingController();
+  //Melakukan deklarasi untuk listview
   List<String> listViewItem = List<String>();
+  //Melakukan deklarasi untuk value pada dropdown 
   String _newValue1 = "Watt";
   String _newValue2 = "Megawatt";
+  //Melakukan deklarasi variable listitem yang ada pada dropdown
   var listItem1 = ["Watt", "Megawatt", "Kilowatt"];
   var listItem2 = ["Watt", "Megawatt", "Kilowatt"];
+  //Melakukan deklarasi inputan dan hasil untuk method perhitungan
   double _hasil = 0;
   double _input = 0;
 
+  //Melakukan perhitungan conver antara watt, megawatt dan kilowatt
   void perhitunganPower() {
     setState(() {
+      _input = double.parse(inputan.text);
+      if (_newValue1 == "Watt") {
+       if(_newValue2 == "Watt"){
+         _hasil = _input;
+       } else if(_newValue2 == "Megawatt"){
+         _hasil = _input / 100000;
+       } else if(_newValue2 == "Kilowatt"){
+         _hasil = _input / 1000;
+       }
+      } else if(_newValue1 == "Megawatt") {
+          if(_newValue2 == "Megawatt"){
+            _hasil = _input;
+          } else if(_newValue2 == "Watt"){
+            _hasil = 1000000 * _input;
+          } else if(_newValue2 == "Kilowatt"){
+            _hasil = 1000 * _input;
+          }
+        } else{
+          if(_newValue2 == "Watt"){
+            _hasil = _input / 1000;
+          } else if(_newValue2 == "Megawatt"){
+            _hasil = _input / 1000;
+          } else if(_newValue2 == "Kilowatt"){
+            _hasil = _input;
+          }
+        }
+    });
+  }
 
+  //Membuat method onchange untuk value1
+  void onChange(String changeValue){
+    setState((){
+      _newValue1 = changeValue;
+    });
+  }
+
+  //Membuat method onchange2 untuk value2
+  void onChange2(String changeValue){
+    setState((){
+      _newValue2 = changeValue;
     });
   }
 
@@ -64,6 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [ 
+                //Membuat jarak antara dropdown dengan tulisan Convert Power Watt 
                 Stack(
                   children: [
                       Container(
@@ -71,6 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         )  
                 ],),
 
+                  //Membuat sebuah dropdown pertama untuk pertukaran dengan dropdown kedua
                   Text("Dari : "),
                     DropdownButton<String>(
                     items: listItem1.map((String value) {
@@ -80,13 +128,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     }).toList(),
                     value: _newValue1,
-                    onChanged: (String changeValue) {
-                      setState(() {
-                        _newValue1 = changeValue;
-                      });
-                    },
+                    onChanged: onChange
                   ),
 
+                  //Membuat sebuah dropdown kedua untuk pertukaran dengan dropdown pertama
                   Text("      Ke : "),
                   DropdownButton<String>(
                     items: listItem2.map((String value) {
@@ -96,18 +141,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     }).toList(),
                     value: _newValue2,
-                    onChanged: (String changeValue) {
-                      setState(() {
-                        _newValue2 = changeValue;
-                      });
-                    },
+                    onChanged: onChange2
                   ),
                 ],
               ),
 
+              //Membuat tulisan Inputan Nominal dengan menggunakan stack agar terdapat jarak diantara form text field dengan dropdown
               Stack(
                children: [
-                 
                   Container(
                    margin: EdgeInsets.only(top: 20),
                    padding: EdgeInsets.only(left: 10),
@@ -119,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
                      )  
                 ],),
 
+              //Membuat sebuah inputan untuk menginputkan angka yang akan di konversi dengan max 5 angka
                TextFormField(
                   maxLength: 5,
                   controller: inputan,
@@ -132,6 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       decimal: true, signed: false),
                 ),
 
+                //Membuat tulisan Inputan Nominal dengan menggunakan stack agar terdapat jarak diantara form text field dengan dropdown
                 Stack(
                   children: [
                       Container(
@@ -141,20 +184,19 @@ class _MyHomePageState extends State<MyHomePage> {
                             "Result : ", style: TextStyle(fontSize: 14, color: Colors.black),
                           ),
                         )  
-                ],),
-
-               TextFormField(
-                  controller: inputan,
-                  decoration: InputDecoration(
-                    hintText: "",
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9+\,]'))
                   ],
-                  keyboardType: TextInputType.numberWithOptions(
-                      decimal: true, signed: false),
-                ),    
+                ),
+              
+              //Membuat sebuah inputan yang isinya sebuah hasil dari hasil konversi dan inputan itu tidak bisa diisi atau bernilai false pada enabled
+               TextFormField(
+                 enabled: false,
+                  controller: hasil,
+                  decoration: InputDecoration(
+                    hintText: "$_hasil",
+                  ),
+               ), 
 
+              //Membuat jarak antara textformfield dengan raised button
                 Stack(
                   children: [
                       Container(
@@ -162,6 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         )  
                 ],),
                 
+                //Membuat sebuah button dengan menggunakan sizebox dalam mengatur ukuran box 
                 SizedBox(
                   width: 200,
                   child:RaisedButton(
@@ -178,10 +221,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     )
                   ),
-                ),
+                ),  
               ],
            ),
-
         ],
       ),
     );
