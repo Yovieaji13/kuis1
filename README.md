@@ -1,5 +1,10 @@
 # kuis1
 
+Hasil Kuis 1
+
+![screenshoot](/image/gmbr1.jpeg)
+
+![screenshoot](/image/gmbr2.jpeg)
 A new Flutter project.
 
 ## Getting Started
